@@ -4,6 +4,7 @@ use std::{
 };
 
 use clap::{Parser, command};
+use rand::{Rng, distr::StandardUniform};
 
 use crate::game::{GameEnd, Move, parse_move};
 
@@ -11,29 +12,25 @@ mod game;
 
 #[derive(Parser, Debug)]
 #[command(
-    version,
-    about,
+    author = "Squawkykaka",
+    version = "1.0",
+    about = "Play paper scissors rock to be able to use the terminal.",
     long_about = "This is paper(P), scissors(S), rock(R), choose a guess to continue."
 )]
 struct Args {
-    #[arg(short, long)]
-    command: String,
+    command: Vec<String>,
 }
 
 fn main() -> color_eyre::eyre::Result<()> {
     color_eyre::install()?;
-
     let args = Args::parse();
 
     let mut guess = String::new();
 
     io::stdin().read_line(&mut guess)?;
 
-    let enemy_move = match rand::random_range(0..=2) {
-        0 => Move::Paper,
-        1 => Move::Scissors,
-        _ => Move::Rock,
-    };
+    let enemy_move: Move = rand::rng().sample(StandardUniform);
+
     let player_move = match parse_move(guess.trim_end()) {
         Ok(current_move) => current_move,
         Err(_) => {
@@ -64,11 +61,9 @@ fn main() -> color_eyre::eyre::Result<()> {
     }
 }
 
-fn run_command(string_command: String) {
-    let command_args: Vec<&str> = string_command.split(" ").collect();
-
-    let mut binding = Command::new(command_args.first().unwrap());
-    let new_command = binding.args(&command_args[1..]);
+fn run_command(string_command: Vec<String>) {
+    let mut binding = Command::new(string_command.first().unwrap());
+    let new_command = binding.args(&string_command[1..]);
 
     new_command
         .stdout(Stdio::inherit())

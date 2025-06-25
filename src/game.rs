@@ -1,3 +1,5 @@
+use rand::distr::{Distribution, StandardUniform};
+
 pub enum GameEnd {
     Win,
     Loss,
@@ -9,6 +11,16 @@ pub enum Move {
     Scissors,
     Paper,
     Rock,
+}
+
+impl Distribution<Move> for StandardUniform {
+    fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> Move {
+        match rng.random_range(0..=2) {
+            0 => Move::Paper,
+            1 => Move::Scissors,
+            _ => Move::Rock,
+        }
+    }
 }
 
 impl Move {
