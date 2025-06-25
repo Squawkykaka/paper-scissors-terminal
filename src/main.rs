@@ -1,4 +1,3 @@
-use core::net;
 use std::{
     io,
     process::{Command, Stdio},
@@ -21,14 +20,14 @@ struct Args {
     command: String,
 }
 
-fn main() {
+fn main() -> color_eyre::eyre::Result<()> {
+    color_eyre::install()?;
+
     let args = Args::parse();
 
     let mut guess = String::new();
 
-    io::stdin()
-        .read_line(&mut guess)
-        .expect("Failed to read line");
+    io::stdin().read_line(&mut guess)?;
 
     let enemy_move = match rand::random_range(0..=2) {
         0 => Move::Paper,
@@ -37,9 +36,12 @@ fn main() {
     };
     let player_move = match parse_move(guess.trim_end()) {
         Ok(current_move) => current_move,
-        Err(current_move) => {
-            println!("{current_move} is not a valid move. Choose another");
-            return;
+        Err(_) => {
+            println!(
+                "{} is not a valid move, run with --help to get help.",
+                guess.trim_end()
+            );
+            std::process::exit(1);
         }
     };
 
@@ -48,10 +50,17 @@ fn main() {
     match game_end {
         GameEnd::Win => {
             println!("You won!");
-            run_command(args.command)
+            run_command(args.command);
+            std::process::exit(0);
         }
-        GameEnd::Draw => println!("Its a draw"),
-        GameEnd::Loss => println!("You lost!"),
+        GameEnd::Draw => {
+            println!("Its a draw");
+            std::process::exit(0);
+        }
+        GameEnd::Loss => {
+            println!("You lost!");
+            std::process::exit(0);
+        }
     }
 }
 
