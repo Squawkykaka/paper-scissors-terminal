@@ -18,6 +18,7 @@ mod game;
     long_about = "This is paper(P), scissors(S), rock(R), choose a guess to continue."
 )]
 struct Args {
+    #[arg(required = true)]
     command: Vec<String>,
 }
 
