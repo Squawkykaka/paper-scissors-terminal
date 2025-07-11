@@ -1,5 +1,5 @@
 use std::{
-    io,
+    io::{self, Write},
     process::{Command, Stdio},
 };
 
@@ -14,8 +14,10 @@ mod game;
 #[command(
     author = "Squawkykaka",
     version = "1.0",
-    about = "Play paper scissors rock to be able to use the terminal.",
-    long_about = "This is paper(P), scissors(S), rock(R), choose a guess to continue."
+    about = "
+Play paper scissors rock to be able to use the terminal.
+Choose [P, S, R] to guess.
+    "
 )]
 struct Args {
     #[arg(required = true)]
@@ -27,6 +29,9 @@ fn main() -> color_eyre::eyre::Result<()> {
     let args = Args::parse();
 
     let mut guess = String::new();
+
+    print!("Please enter your move: ");
+    io::stdout().flush()?;
 
     io::stdin().read_line(&mut guess)?;
 
@@ -72,4 +77,51 @@ fn run_command(string_command: Vec<String>) {
         .expect("Command failed to run")
         .wait()
         .expect("Zombie process spawned");
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::game::parse_move;
+
+    #[test]
+    fn test_parse_invalid_move() {
+        assert!(parse_move("X").is_err());
+        assert!(parse_move("").is_err());
+    }
+
+    #[test]
+    fn test_compare_moves() {
+        assert_eq!(Move::compare_move(Move::Paper, Move::Rock), GameEnd::Win);
+        assert_eq!(Move::compare_move(Move::Rock, Move::Scissors), GameEnd::Win);
+        assert_eq!(
+            Move::compare_move(Move::Scissors, Move::Paper),
+            GameEnd::Win
+        );
+
+        assert_eq!(Move::compare_move(Move::Paper, Move::Paper), GameEnd::Draw);
+        assert_eq!(Move::compare_move(Move::Rock, Move::Rock), GameEnd::Draw);
+        assert_eq!(
+            Move::compare_move(Move::Scissors, Move::Scissors),
+            GameEnd::Draw
+        );
+
+        assert_eq!(Move::compare_move(Move::Rock, Move::Paper), GameEnd::Loss);
+        assert_eq!(
+            Move::compare_move(Move::Scissors, Move::Rock),
+            GameEnd::Loss
+        );
+        assert_eq!(
+            Move::compare_move(Move::Paper, Move::Scissors),
+            GameEnd::Loss
+        );
+    }
+
+    #[test]
+    fn test_run_command() {
+        // Test a simple command like `echo`
+        let command = vec!["echo".to_string(), "Hello, World!".to_string()];
+        run_command(command);
+        // Note: This test assumes the command runs successfully. You may need to mock `Command` for more robust testing.
+    }
 }

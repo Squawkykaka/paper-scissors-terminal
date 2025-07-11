@@ -1,5 +1,6 @@
 use rand::distr::{Distribution, StandardUniform};
 
+#[derive(PartialEq, Debug)]
 pub enum GameEnd {
     Win,
     Loss,
