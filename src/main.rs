@@ -30,8 +30,8 @@ fn main() -> color_eyre::eyre::Result<()> {
 
     let mut guess = String::new();
 
-    print!("Please enter your move: ");
-    io::stdout().flush()?;
+    eprint!("Please enter your move, choose (P)aper, (S)cissors or (R)ock: ");
+    io::stderr().flush()?;
 
     io::stdin().read_line(&mut guess)?;
 
@@ -52,16 +52,17 @@ fn main() -> color_eyre::eyre::Result<()> {
 
     match game_end {
         GameEnd::Win => {
-            println!("You won!");
+            eprintln!("You won!");
+
             run_command(args.command);
             std::process::exit(0);
         }
         GameEnd::Draw => {
-            println!("Its a draw");
+            eprintln!("Its a draw");
             std::process::exit(0);
         }
         GameEnd::Loss => {
-            println!("You lost!");
+            eprintln!("You lost!");
             std::process::exit(0);
         }
     }
