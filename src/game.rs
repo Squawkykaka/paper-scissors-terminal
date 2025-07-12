@@ -64,4 +64,10 @@ mod test {
         assert_eq!(parse_move("r"), Ok(Move::Rock));
         assert_eq!(parse_move("R"), Ok(Move::Rock));
     }
+
+    #[test]
+    fn test_parse_invalid_move() {
+        assert!(parse_move("X").is_err());
+        assert!(parse_move("").is_err());
+    }
 }

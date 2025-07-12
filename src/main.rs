@@ -82,13 +82,6 @@ fn run_command(string_command: Vec<String>) {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::game::parse_move;
-
-    #[test]
-    fn test_parse_invalid_move() {
-        assert!(parse_move("X").is_err());
-        assert!(parse_move("").is_err());
-    }
 
     #[test]
     fn test_compare_moves() {

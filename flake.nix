@@ -132,6 +132,8 @@
           # Inherit inputs from checks.
           checks = self.checks.${system};
 
+          RUST_SRC_PATH = pkgs.rustPlatform.rustLibSrc;
+
           # Additional dev-shell environment variables can be set directly
           # MY_CUSTOM_DEVELOPMENT_VAR = "something else";
 
