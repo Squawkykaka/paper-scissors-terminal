@@ -1,8 +1,8 @@
 # Paper Scissors Terminal
 
-Make it so you have to play paper scissors rock to run commands.
+![Banner of Paper scissors terminal](docs/assets/paper-scissors-terminal.png)
 
-Should run on any system.
+_Make it so you have to play paper scissors rock to run commands._
 
 ```
 ➜  paper-scissors-rock git:(main) ✗ ./result/bin/paper-scissors-terminal --help
